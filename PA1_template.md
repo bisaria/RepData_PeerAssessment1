@@ -21,13 +21,6 @@ library(scales)
 library("lattice")
 
 df = read.csv("activity.csv")
-```
-
-```
-## Error: cannot open the connection
-```
-
-```r
 df$date <- as.Date(df$date, format = "%Y-%m-%d")  # Format date strings to Date format
 
 # First few lines of the dataset df after preprocessing
@@ -90,10 +83,11 @@ ggplot(d, aes(x=steps)) +
 
 
 ```r
+options(scipen = 1, digits = 0)
 df.mean <- mean(d$steps)
 ```
 
-Mean of total steps taken per day, `df.mean` = 1.0766 &times; 10<sup>4</sup>
+Mean of total steps taken per day, `df.mean` = 10766
 
 
 ```r
@@ -127,13 +121,13 @@ head(interval.mean)
 ```
 
 ```
-##   interval   steps        timeOfTheDay
-## 1        0 1.71698 2014-11-09 00:00:00
-## 2        5 0.33962 2014-11-09 00:05:00
-## 3       10 0.13208 2014-11-09 00:10:00
-## 4       15 0.15094 2014-11-09 00:15:00
-## 5       20 0.07547 2014-11-09 00:20:00
-## 6       25 2.09434 2014-11-09 00:25:00
+##   interval steps        timeOfTheDay
+## 1        0     2 2014-11-09 00:00:00
+## 2        5     0 2014-11-09 00:05:00
+## 3       10     0 2014-11-09 00:10:00
+## 4       15     0 2014-11-09 00:15:00
+## 5       20     0 2014-11-09 00:20:00
+## 6       25     2 2014-11-09 00:25:00
 ```
 
 ```r
@@ -161,7 +155,7 @@ interval.mean[interval.mean$steps == max(interval.mean$steps), c("interval",
 
 ```
 ##     interval steps
-## 104      835 206.2
+## 104      835   206
 ```
 
 
@@ -205,13 +199,13 @@ head(df.complete)
 ```
 
 ```
-##     steps       date interval
-## 1 1.71698 2012-10-01        0
-## 2 0.33962 2012-10-01        5
-## 3 0.13208 2012-10-01       10
-## 4 0.15094 2012-10-01       15
-## 5 0.07547 2012-10-01       20
-## 6 2.09434 2012-10-01       25
+##   steps       date interval
+## 1     2 2012-10-01        0
+## 2     0 2012-10-01        5
+## 3     0 2012-10-01       10
+## 4     0 2012-10-01       15
+## 5     0 2012-10-01       20
+## 6     2 2012-10-01       25
 ```
 
 
@@ -262,14 +256,14 @@ ggplot(d.complete, aes(x=steps)) +
 df.complete.mean <- mean(d.complete$steps)
 ```
 
-Mean of total steps taken per day = 1.0766 &times; 10<sup>4</sup>
+Mean of total steps taken per day = 10766
 
 
 ```r
 df.complete.median <- median(d.complete$steps)
 ```
 
-Median of total steps taken per day = 1.0766 &times; 10<sup>4</sup>
+Median of total steps taken per day = 10766
 
 The distribution seems to be little different from the earlier distribution, but the means and medians of the distribution do not change and are approximately equal to each other in both the cases.
 
@@ -286,13 +280,13 @@ head(df.complete)
 ```
 
 ```
-##     steps       date interval     day
-## 1 1.71698 2012-10-01        0 weekday
-## 2 0.33962 2012-10-01        5 weekday
-## 3 0.13208 2012-10-01       10 weekday
-## 4 0.15094 2012-10-01       15 weekday
-## 5 0.07547 2012-10-01       20 weekday
-## 6 2.09434 2012-10-01       25 weekday
+##   steps       date interval     day
+## 1     2 2012-10-01        0 weekday
+## 2     0 2012-10-01        5 weekday
+## 3     0 2012-10-01       10 weekday
+## 4     0 2012-10-01       15 weekday
+## 5     0 2012-10-01       20 weekday
+## 6     2 2012-10-01       25 weekday
 ```
 
 

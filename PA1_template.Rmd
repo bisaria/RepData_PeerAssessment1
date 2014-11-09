@@ -14,7 +14,7 @@ There around 17568 observations of 3 variables, namely:
 
 ### Load and preprocess the data
 
-```{r, echo = TRUE,warning=F}
+```{r, echo = TRUE,warning=F, message=FALSE}
 library(ggplot2)
 library(scales)
 library("lattice")
@@ -66,6 +66,7 @@ ggplot(d, aes(x=steps)) +
 ```
 
 ```{r}
+options(scipen = 1, digits = 0)
 df.mean<-mean(d$steps )
 ```
 Mean of total steps taken per day, `df.mean` = `r {df.mean}`
