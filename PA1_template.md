@@ -1,6 +1,6 @@
 
 Reproducible Research: Peer Assessment 1
-============================
+===================================
 
 This assignment uses data collected from a personal activity monitoring device to answer certain questions about the data and produce a reproducible report about the same. 
 
@@ -9,9 +9,10 @@ This assignment uses data collected from a personal activity monitoring device t
 The data consists of two months of data from an anonymous individual collected during the months of October and November, 2012 and include the number of steps taken in 5 minute intervals each day.
 
 There around 17568 observations of 3 variables, namely:
-- steps
-- date
-- interval
+
+- steps  
+- date  
+- interval  
 
 ### Loading and preprocessing the data
 
@@ -19,13 +20,13 @@ There around 17568 observations of 3 variables, namely:
 ```r
 library(ggplot2)
 library(scales)
-library("lattice")
+library(lattice)
 
-df = read.csv("activity.csv")
-df$date <- as.Date( df$date, format="%Y-%m-%d")                                  # Format date strings to Date format
+data = read.csv("activity.csv")
+data$date <- as.Date( data$date, format="%Y-%m-%d")                                  # Format date strings to Date format
 
 # First few lines of the dataset df after preprocessing
-head(df)
+head(data)
 ```
 
 ```
@@ -44,34 +45,34 @@ Aggregate the total number of steps taken each day by `date` variable using FUN 
 
 
 ```r
-df_withoutNA<-na.exclude(df)                                                    # Create a new dataset excluding the NAs
-d<-aggregate(df_withoutNA$steps,                                                # Aggregate data by date             
+df_withoutNA<-na.exclude(data)                                                    # Create a new dataset excluding the NAs
+df<-aggregate(df_withoutNA$steps,                                                # Aggregate data by date             
               by = list(Date = format(df_withoutNA$date, '%Y-%m-%d')),
               FUN = sum, 
               na.rm=TRUE)
 
-colnames(d)[2]<-"steps"                                                         # rename second column as 'steps'
+colnames(df)[2]<-"steps"                                                         # rename second column as 'steps'
 ```
 
 Plot a histogram of the total number of steps taken each day with red solid line for mean and blue dashed line for the median of the distribution.
 
 
 ```r
-ggplot(d, aes(x=steps)) + 
+ggplot(df, aes(x=steps)) + 
     geom_histogram(binwidth=1000, 
                    colour="black", 
                    fill="white") +
     ylab("Frequency") +                                                              # y axis label
     xlab("Total Number of Steps taken each day") +                                   # x axis label
     ggtitle("Histogram of Total Number of Steps taken each day") +                   # plot title 
-    theme(plot.title = element_text(face = "bold", colour="#990000", size=16),       # plot title text font
-           axis.title.x = element_text(face="bold", colour="#990000", size=14),      # x axis text font
-           axis.title.y = element_text(face="bold", colour="#990000", size=14)) +    # y axis text font
-    geom_vline(aes(xintercept=mean(steps, na.rm=TRUE)),                                 # Ignore NA values for mean
+    theme(plot.title = element_text(face = "bold", colour="#990000", size=14),       # title text font
+           axis.title.x = element_text(face="bold", colour="#990000", size=12),      # x axis text font
+           axis.title.y = element_text(face="bold", colour="#990000", size=12)) +    # y axis text font
+    geom_vline(aes(xintercept=mean(steps)),                                
                color="red", 
                linetype="solid", 
                size=1) + 
-    geom_vline(aes(xintercept=median(steps, na.rm=TRUE)),                               # Ignore NA values for median
+    geom_vline(aes(xintercept=median(steps)),                              
                color="blue", 
                linetype="dashed", 
                size=1)
@@ -82,13 +83,13 @@ ggplot(d, aes(x=steps)) +
 
 ```r
 options(scipen = 1, digits = 0)
-df.mean<-mean(d$steps )
+df.mean<-mean(df$steps )
 ```
 Mean of total steps taken per day, `df.mean` = 10766
 
 
 ```r
-df.median<-median(d$steps)
+df.median<-median(df$steps)
 ```
 Median of total steps taken per day, `df.median` = 10765
 
@@ -102,43 +103,29 @@ Aggregate the total number of steps taken each day by `interval` variable using 
 
 
 ```r
-interval.mean<-aggregate(as.numeric( as.character( df$steps ) ) ,
-               by = list(interval = as.factor(df$interval)),
+interval.mean<-aggregate(as.numeric( as.character( data$steps ) ) ,
+               by = list(interval = as.factor(data$interval)),
                FUN = mean, 
                na.rm=TRUE)
 
-colnames(interval.mean)[2]<-"steps"                                           # rename second column as 'steps'
+colnames(interval.mean)[2]<-"steps"                                           # rename second column as 'steps'  
 
 # Save interval as POSIXct in a new column
-interval.mean$timeOfTheDay <- as.POSIXct(strptime(sprintf("%04d", as.numeric(as.character(interval.mean$interval))), "%H%M"))
+interval.mean$timeOfTheDay <- as.POSIXct(strptime(sprintf("%04d", as.numeric(as.character(interval.mean$interval))), "%H%M"))  
 
-head(interval.mean)                                                             
-```
-
-```
-##   interval steps        timeOfTheDay
-## 1        0     2 2014-11-12 00:00:00
-## 2        5     0 2014-11-12 00:05:00
-## 3       10     0 2014-11-12 00:10:00
-## 4       15     0 2014-11-12 00:15:00
-## 5       20     0 2014-11-12 00:20:00
-## 6       25     2 2014-11-12 00:25:00
-```
-
-```r
 ggplot(interval.mean, aes(timeOfTheDay,steps)) + geom_line(aes(group=1)) +
   scale_x_datetime(labels = date_format("%H:%M")) +                           # display x label in required format
   xlab("5-minutes Interval") + 
   ylab("Average number of steps taken, averaged across all days") + 
   ggtitle("Average number of steps taken, averaged across all days \n at 5-minute intervals for October and November, 2012") +
-  theme(plot.title = element_text(face = "bold", colour="#990000",size=16),       # plot title text font
-           axis.title.x = element_text(face="bold", colour="#990000", size=14),   # x axis text font
-           axis.title.y = element_text(face="bold", colour="#990000", size=14))   # y axis text font
+  theme(plot.title = element_text(face = "bold", colour="#990000",size=14),       # plot title text font
+           axis.title.x = element_text(face="bold", colour="#990000", size=12),   # x axis text font
+           axis.title.y = element_text(face="bold", colour="#990000", size=12))   # y axis text font
 ```
 
 ![plot of chunk Time_Series_Plot](figure/Time_Series_Plot-1.png) 
 
-5-minute interval, on average across all the days in the dataset, that contains the maximum number of steps can be obtained as follows:
+5-minute interval, on average across all the days in the dataset, that contains the maximum number of steps is:
 
 
 ```r
@@ -156,7 +143,7 @@ Total number of missing values in the dataset (i.e. the total number of rows wit
 
 
 ```r
-nrow(df[is.na(df$steps),])
+nrow(data[is.na(data$steps),])
 ```
 
 ```
@@ -165,26 +152,18 @@ nrow(df[is.na(df$steps),])
 
 Total number of rows with NAs is 2304  
 
-Substitute all NAs for steps with the mean steps for that interval and create a new dataset:
+We can impute the missing steps in the data by substitute NA for each such step with the average number of steps in that interval calculated across all the days in the dataset. 
 
 
 ```r
-df.complete <- df
-for(row in 1:length(df.complete$steps)) {                            # Loop through each row of the dataset
-    if (is.na(df.complete$steps[row]))                               # check if steps is NA
-    {
-      interval<-df.complete[row,'interval']                          # get the corresponding interval                  
-      m<-interval.mean[interval.mean$interval == interval,'steps']   # check the mean steps for that particular interval
-      df.complete$steps[row]<-m                                      # substitute the NA with the mean
-    }
-}
+df.imputed <- transform(data, steps = ifelse(is.na(data$steps), interval.mean$steps[match(data$interval, interval.mean$interval)] , data$steps))
 ```
 
-This is how the dataset looks now.
+This is how the imputed dataset looks.
 
 
 ```r
-head(df.complete)
+head(df.imputed)
 ```
 
 ```
@@ -201,28 +180,38 @@ Aggregate the total number of steps taken each day by `date` variable using FUN 
 
 
 ```r
-d.complete<-aggregate(df.complete$steps,                                 # Aggregate data by date 
-               by = list(Date = format(df.complete$date, '%Y-%m-%d')),
+df.imputed_sum<-aggregate(df.imputed$steps,                                 # Aggregate data by date 
+               by = list(Date = format(df.imputed$date, '%Y-%m-%d')),
                 FUN = sum, 
-                na.rm=TRUE)
+                na.rm=TRUE)  
+colnames(df.imputed_sum)[2]<-"steps"                                         # rename second column as 'steps'  
+head(df.imputed_sum)
+```
 
-colnames(d.complete)[2]<-"steps"                                         # rename second column as 'steps'
+```
+##         Date steps
+## 1 2012-10-01 10766
+## 2 2012-10-02   126
+## 3 2012-10-03 11352
+## 4 2012-10-04 12116
+## 5 2012-10-05 13294
+## 6 2012-10-06 15420
 ```
 
 Plot a histogram of the total number of steps taken each day with red solid line for mean and blue dashe line for the median of the distribution.
 
 
 ```r
-ggplot(d.complete, aes(x=steps)) + 
+ggplot(df.imputed_sum, aes(x=steps)) + 
     geom_histogram(binwidth=1000, 
                    colour="black", 
                    fill="white") +
     ylab("Frequency") +                                                              # y axis label
     xlab("Total Number of Steps taken each day") +                                   # x axis label
     ggtitle("Histogram of Total Number of Steps taken each day") +                   # plot title 
-    theme(plot.title = element_text(face = "bold", colour="#990000",size=16),        # plot title text font
-           axis.title.x = element_text(face="bold", colour="#990000", size=14),      # x axis text font
-           axis.title.y = element_text(face="bold", colour="#990000", size=14)) +    # y axis text font
+    theme(plot.title = element_text(face = "bold", colour="#990000",size=14),        # plot title text font
+           axis.title.x = element_text(face="bold", colour="#990000", size=12),      # x axis text font
+           axis.title.y = element_text(face="bold", colour="#990000", size=12)) +    # y axis text font
     geom_vline(aes(xintercept=mean(steps)),                                 
                color="red", 
                linetype="solid", 
@@ -237,15 +226,42 @@ ggplot(d.complete, aes(x=steps)) +
 
 
 ```r
-df.complete.mean<-mean(d.complete$steps )
+imputed.mean<-mean(df.imputed_sum$steps )
 ```
 Mean of total steps taken per day = 10766
 
 
 ```r
-df.complete.median<-median(d.complete$steps)
+imputed.median<-median(df.imputed_sum$steps)
 ```
 Median of total steps taken per day = 10766
+
+Calculate the difference between the imputed mean and mean with missing data:
+
+
+```r
+diff.mean <- imputed.mean - df.mean
+```
+
+Difference in means is 0
+
+Calculate the difference between the imputed median and median with missing data:
+
+
+```r
+diff.median <- imputed.median - df.median
+```
+
+Difference in medians is 1
+
+Calculate the difference in the total daily number of steps:
+
+
+```r
+diff.steps <- sum(df.imputed$steps) - sum(df$steps)
+```
+
+Difference in the total daily number of steps is 86130
 
 The distribution seems to be little different from the earlier distribution, but the means and medians of the distribution do not change and are approximately equal to each other in both the cases.
 
@@ -255,39 +271,25 @@ Create a new factor variable in the dataset with two levels - "weekday" and "wee
 
 
 ```r
-df.complete$day<-as.factor(c("weekend", rep("weekday",5), "weekend")[as.POSIXlt(df.complete$date)$wday + 1])
-
-head(df.complete)
+df.imputed$day<-as.factor(c("weekend", rep("weekday",5), "weekend")[as.POSIXlt(df.imputed$date)$wday + 1])
 ```
-
-```
-##   steps       date interval     day
-## 1     2 2012-10-01        0 weekday
-## 2     0 2012-10-01        5 weekday
-## 3     0 2012-10-01       10 weekday
-## 4     0 2012-10-01       15 weekday
-## 5     0 2012-10-01       20 weekday
-## 6     2 2012-10-01       25 weekday
-```
-
-A panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
 
 Aggregate the total number of steps taken each day by `day` and `interval` using FUN = mean.
 
 
 ```r
-d.complete<-aggregate(df.complete$steps, 
-                by = list(day = df.complete$day, interval = as.factor(df.complete$interval)),
+df.week<-aggregate(df.imputed$steps, 
+                by = list(day = df.imputed$day, interval = as.factor(df.imputed$interval)),
                 FUN = mean, 
                 na.rm=TRUE)
 
-colnames(d.complete)[3] = 'steps'
+colnames(df.week)[3] = 'steps'
 
 # Save interval as POSIXct in a new column
-d.complete$timeOfTheDay <- as.POSIXct(strptime(sprintf("%04d", as.numeric(as.character(d.complete$interval))), "%H%M"))
+df.week$timeOfTheDay <- as.POSIXct(strptime(sprintf("%04d", as.numeric(as.character(df.week$interval))), "%H%M"))
 
 xyplot(steps ~ timeOfTheDay | day,
-        data = d.complete,
+        data = df.week,
         main = "Average number of steps, averaged across weekends and weekdays \n at 5-minute intervals for October and November, 2012",
         xlab = "5-minute Interval", 
         ylab = "Average number of steps",
@@ -298,4 +300,5 @@ xyplot(steps ~ timeOfTheDay | day,
 
 ![plot of chunk Time_Series_Imputed](figure/Time_Series_Imputed-1.png) 
 
+Looking at the plot, we can notice substantial difference in the activity pattern between weekends and weekdays, with activities in general peaking 8 to 10 o'clock in the morning for both weekends and weekdays. Also, subject appears to be more active throughout a weekend as compared to weekdays.
 
