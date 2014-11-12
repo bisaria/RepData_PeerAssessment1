@@ -1,5 +1,9 @@
-Reprodcible Research: Project 1
-================================================
+---
+title: "Reproducible Research: Peer Assessment 1"
+output: 
+  html_document:
+    keep_md: true
+---
 
 This assignment uses data collected from a personal activity monitoring device to answer certain questions about the data and produce a reproducible report about the same. 
 
@@ -12,7 +16,7 @@ There around 17568 observations of 3 variables, namely:
 - date
 - interval
 
-### Load and preprocess the data
+### Loading and preprocessing the data
 
 ```{r, echo = TRUE,warning=F, message=FALSE}
 library(ggplot2)
@@ -27,7 +31,7 @@ head(df)
 
 ```
 
-### Mean total number of steps taken each day
+### What is mean total number of steps taken per day?
 
 Aggregate the total number of steps taken each day by `date` variable using FUN = sum.
 
@@ -42,7 +46,7 @@ colnames(d)[2]<-"steps"                                                         
 
 ```
 
-Plot a histogram of the total number of steps taken each day with red solid line for mean and blue dashe line for the median of the distribution.
+Plot a histogram of the total number of steps taken each day with red solid line for mean and blue dashed line for the median of the distribution.
 
 ```{r Histogram}
 ggplot(d, aes(x=steps)) + 
@@ -52,14 +56,14 @@ ggplot(d, aes(x=steps)) +
     ylab("Frequency") +                                                              # y axis label
     xlab("Total Number of Steps taken each day") +                                   # x axis label
     ggtitle("Histogram of Total Number of Steps taken each day") +                   # plot title 
-    theme(plot.title = element_text(face = "bold", colour="#990000",size=16),        # plot title text font
+    theme(plot.title = element_text(face = "bold", colour="#990000", size=16),       # plot title text font
            axis.title.x = element_text(face="bold", colour="#990000", size=14),      # x axis text font
            axis.title.y = element_text(face="bold", colour="#990000", size=14)) +    # y axis text font
-    geom_vline(aes(xintercept=mean(steps, na.rm=T)),                                 # Ignore NA values for mean
+    geom_vline(aes(xintercept=mean(steps, na.rm=TRUE)),                                 # Ignore NA values for mean
                color="red", 
                linetype="solid", 
                size=1) + 
-    geom_vline(aes(xintercept=median(steps, na.rm=T)),                               # Ignore NA values for median
+    geom_vline(aes(xintercept=median(steps, na.rm=TRUE)),                               # Ignore NA values for median
                color="blue", 
                linetype="dashed", 
                size=1)
@@ -78,7 +82,7 @@ Median of total steps taken per day, `df.median` = `r {df.median}`
 
 The distribution seems to be a normal distribution with mean and median of the distribution approximately equal to each other.
 
-### Average Daily Activity Pattern
+### What is the average daily activity pattern?
 
 Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
@@ -144,8 +148,6 @@ This is how the dataset looks now.
 head(df.complete)
 ```
 
-### Mean total number of steps taken each day (Imputed)
-
 Aggregate the total number of steps taken each day by `date` variable using FUN = sum.
 
 ```{r}
@@ -193,7 +195,7 @@ Median of total steps taken per day = `r {df.complete.median}`
 
 The distribution seems to be little different from the earlier distribution, but the means and medians of the distribution do not change and are approximately equal to each other in both the cases.
 
-### Differences in activity patterns between weekdays and weekends (Imputed)
+### Are there differences in activity patterns between weekdays and weekends?
 
 Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
 
