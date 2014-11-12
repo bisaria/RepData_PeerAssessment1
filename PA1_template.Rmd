@@ -1,9 +1,6 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+
+Reproducible Research: Peer Assessment 1
+============================
 
 This assignment uses data collected from a personal activity monitoring device to answer certain questions about the data and produce a reproducible report about the same. 
 
